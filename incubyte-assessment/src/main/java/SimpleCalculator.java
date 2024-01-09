@@ -27,26 +27,54 @@ public class SimpleCalculator {
     }
 
     List<Integer> convertStringToInteger(String numbers) throws InvalidInputException {
-        return seperateByDelimiter(numbers)
+        return separateByDelimiter(numbers)
                 .stream()
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
     }
 
-    private List<String> seperateByDelimiter(String numbers) throws InvalidInputException {
+    private List<String> separateByDelimiter(String numbers) throws InvalidInputException {
         List<String> curatedSplits = new ArrayList<>();
-        String delimiter = ",";
-        List<String> splits = Arrays.asList(numbers.split(delimiter));
+        numbers = prepareNewLineAsDelimiter(numbers);
+        String delimiter = setDefaultDelimiter(numbers);
+
+        List<String> splits = prepareSplitsByDelimiter(numbers, delimiter);
         for (String split : splits) {
             if (split.contains("\n")) {
-                    split = split.substring(split.indexOf("\n") + 1);
-               if (split.isEmpty()){
-                   throw new InvalidInputException();
-               }
+                split = split.substring(split.indexOf("\n") + 1);
+                if (split.isEmpty()) {
+                    throw new InvalidInputException();
+                }
             }
             curatedSplits.add(split);
         }
         return curatedSplits;
+    }
+
+    private String prepareNewLineAsDelimiter(String numbers) {
+        if (!isNullOrEmpty(numbers.substring(numbers.indexOf("\n") + 1)) &&
+                numbers.substring(numbers.indexOf("\n") + 1).matches("\\d+")
+        && !isNullOrEmpty(numbers.substring(numbers.indexOf("\n") - 1)) &&
+                numbers.substring(numbers.indexOf("\n") - 1).matches("\\d+")){
+
+            return numbers.replace("\n", ",");
+        }
+        return numbers;
+    }
+
+    private List<String> prepareSplitsByDelimiter(String numbers, String delimiter) {
+        String escape = "//";
+        List<String> splits = new ArrayList<>(Arrays.asList(numbers.split(delimiter)));
+        splits.remove(escape);
+        return splits;
+    }
+
+    private String setDefaultDelimiter(String numbers) {
+        String defaultDelimiter = ",";
+        if (numbers.contains("//")) {
+            defaultDelimiter = String.valueOf(numbers.charAt(numbers.lastIndexOf("//") + 2));
+        }
+        return defaultDelimiter;
     }
 
     private boolean isNullOrEmpty(String numbers) {

@@ -23,10 +23,21 @@ class SimpleCalculatorTest {
         SimpleCalculator calculator = new SimpleCalculator();
         assertEquals(3, calculator.add("1,\n2"));
     }
+    @Test
+    public void addTwoNumberWithNewLineAsDelimiterTest() throws InvalidInputException {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertEquals(6, calculator.add("1\n2,3"));
+    }
 
     @Test
     public void addTwoNumberWithNewLineInvalidInputTest() {
         SimpleCalculator calculator = new SimpleCalculator();
         assertThrows(InvalidInputException.class, () -> calculator.add("1,\n"));
+    }
+
+    @Test
+    public void addTwoNumberWithCustomDelimiterTest() throws InvalidInputException {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertEquals(3, calculator.add("//;\n1;2"));
     }
 }
