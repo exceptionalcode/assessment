@@ -60,4 +60,10 @@ class SimpleCalculatorTest {
         SimpleCalculator calculator = new SimpleCalculator();
         assertThrows(InvalidInputException.class, () -> calculator.add("-1\n2,3"));
     }
+
+    @Test
+    public void addTwoSimpleNumberWithMultipleNegativeTest() {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertThrows(InvalidInputException.class, () -> calculator.add("-1,-2"));
+    }
 }
