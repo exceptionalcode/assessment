@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 public class SimpleCalculator {
 
+    private static final String NEW_LINE = "\n";
+
     public int add(String numbers) throws InvalidInputException {
         if (isNullOrEmpty(numbers)) {
             return 0;
@@ -17,13 +19,9 @@ public class SimpleCalculator {
 
     private int addNumbersFromList(String numbers) throws InvalidInputException {
         List<Integer> listOfNumbers = convertStringToInteger(numbers);
-        int x = 0;
-        for (Integer number : listOfNumbers) {
-            if (0 != number) {
-                x = x + number;
-            }
-        }
-        return x;
+        return listOfNumbers.stream()
+                .mapToInt(Integer::intValue)
+                .sum();
     }
 
     List<Integer> convertStringToInteger(String numbers) throws InvalidInputException {
@@ -40,8 +38,8 @@ public class SimpleCalculator {
 
         List<String> splits = prepareSplitsByDelimiter(numbers, delimiter);
         for (String split : splits) {
-            if (split.contains("\n")) {
-                split = split.substring(split.indexOf("\n") + 1);
+            if (split.contains(NEW_LINE)) {
+                split = split.substring(split.indexOf(NEW_LINE) + 1);
                 if (split.isEmpty()) {
                     throw new InvalidInputException();
                 }
@@ -51,13 +49,22 @@ public class SimpleCalculator {
         return curatedSplits;
     }
 
-    private String prepareNewLineAsDelimiter(String numbers) {
-        if (!isNullOrEmpty(numbers.substring(numbers.indexOf("\n") + 1)) &&
-                numbers.substring(numbers.indexOf("\n") + 1).matches("\\d+")
-        && !isNullOrEmpty(numbers.substring(numbers.indexOf("\n") - 1)) &&
-                numbers.substring(numbers.indexOf("\n") - 1).matches("\\d+")){
-
-            return numbers.replace("\n", ",");
+    private String prepareNewLineAsDelimiter(String numbers) throws InvalidInputException {
+        if (numbers.contains(NEW_LINE)) {
+            String afterNewLine;
+            String beforeNewLine;
+            try {
+                afterNewLine = String.valueOf(numbers.charAt(numbers.indexOf(NEW_LINE) + 1));
+                beforeNewLine = String.valueOf(numbers.charAt(numbers.indexOf(NEW_LINE) - 1));
+            } catch (Exception exception) {
+                throw new InvalidInputException();
+            }
+            if (!isNullOrEmpty(afterNewLine) && !isNullOrEmpty(beforeNewLine)) {
+                if (afterNewLine.matches("\\d+")
+                        && beforeNewLine.matches("\\d+")) {
+                    return numbers.replace(NEW_LINE, ",");
+                }
+            }
         }
         return numbers;
     }
