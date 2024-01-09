@@ -19,6 +19,9 @@ public class SimpleCalculator {
 
     private int addNumbersFromList(String numbers) throws InvalidInputException {
         List<Integer> listOfNumbers = convertStringToInteger(numbers);
+        if (listOfNumbers.stream().anyMatch(x -> x < 0)) {
+            throw new InvalidInputException("negatives not allowed");
+        }
         return listOfNumbers.stream()
                 .mapToInt(Integer::intValue)
                 .sum();

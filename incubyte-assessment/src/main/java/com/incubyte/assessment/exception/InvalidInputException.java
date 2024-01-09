@@ -6,4 +6,8 @@ public class InvalidInputException extends Exception {
         super();
     }
 
+    public InvalidInputException(String message) {
+        // calling the constructor of parent Exception
+        super(message);
+    }
 }

@@ -23,6 +23,7 @@ class SimpleCalculatorTest {
         SimpleCalculator calculator = new SimpleCalculator();
         assertEquals(3, calculator.add("1,\n2"));
     }
+
     @Test
     public void addTwoNumberWithNewLineAsDelimiterTest() throws InvalidInputException {
         SimpleCalculator calculator = new SimpleCalculator();
@@ -39,5 +40,24 @@ class SimpleCalculatorTest {
     public void addTwoNumberWithCustomDelimiterTest() throws InvalidInputException {
         SimpleCalculator calculator = new SimpleCalculator();
         assertEquals(3, calculator.add("//;\n1;2"));
+    }
+
+    @Test
+    public void addTwoSimpleNumberWithNegativeTest1() {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertThrows(InvalidInputException.class, () -> calculator.add("//;\n-1;-2"));
+    }
+
+
+    @Test
+    public void addTwoSimpleNumberWithNegativeTest2() {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertThrows(InvalidInputException.class, () -> calculator.add("-1,2"));
+    }
+
+    @Test
+    public void addTwoNumberWithNewLineAsDelimiterTest3() throws InvalidInputException {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertThrows(InvalidInputException.class, () -> calculator.add("-1\n2,3"));
     }
 }
