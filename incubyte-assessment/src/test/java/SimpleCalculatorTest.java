@@ -5,8 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SimpleCalculatorTest {
 
     @Test
-    public void addTest() {
+    public void addTwoSimpleNumberTest() {
         SimpleCalculator calculator = new SimpleCalculator();
-        assertEquals(2, calculator.add("2"));
+        assertEquals(3, calculator.add("1,2"));
+    }
+
+    @Test
+    public void emptyStringTest() {
+        SimpleCalculator calculator = new SimpleCalculator();
+        assertEquals(0, calculator.add(""));
     }
 }
