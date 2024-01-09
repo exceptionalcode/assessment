@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SimpleCalculator {
 
@@ -7,20 +9,39 @@ public class SimpleCalculator {
         if (isNullOrEmpty(numbers)) {
             return 0;
         }
-        List<String> listOfNumbers = Arrays.asList(numbers.split(","));
-        return addNumbersFromList(listOfNumbers);
+        return addNumbersFromList(numbers);
 
     }
 
-    private int addNumbersFromList(List<String> listOfNumbers) {
+    private int addNumbersFromList(String numbers) {
+        List<Integer> listOfNumbers = convertStringToInteger(numbers);
         int x = 0;
-        for (String numbers : listOfNumbers) {
-            int number = Integer.parseInt(numbers);
+        for (Integer number : listOfNumbers) {
             if (0 != number) {
                 x = x + number;
             }
         }
         return x;
+    }
+
+    List<Integer> convertStringToInteger(String numbers) {
+        return seperateByDelimiter(numbers)
+                .stream()
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> seperateByDelimiter(String numbers) {
+        List<String> curatedSplits = new ArrayList<>();
+        String delimiter = ",";
+        List<String> splits = Arrays.asList(numbers.split(delimiter));
+        for (String split : splits) {
+            if (split.contains("\n")) {
+                split = split.substring(split.indexOf("\n") + 1);
+            }
+            curatedSplits.add(split);
+        }
+        return curatedSplits;
     }
 
     private boolean isNullOrEmpty(String numbers) {
