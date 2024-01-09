@@ -9,6 +9,13 @@ public class SimpleCalculator {
 
     private static final String NEW_LINE = "\n";
 
+    /**
+     * This method is to invoke addition logic, takes string of numbers as input
+     *
+     * @param numbers
+     * @return int
+     * @throws InvalidInputException
+     */
     public int add(String numbers) throws InvalidInputException {
         if (isNullOrEmpty(numbers)) {
             return 0;
@@ -17,20 +24,39 @@ public class SimpleCalculator {
 
     }
 
+    /**
+     * This method is used to add numbers from the list
+     *
+     * @param numbers
+     * @return int
+     * @throws InvalidInputException
+     */
     private int addNumbersFromList(String numbers) throws InvalidInputException {
         List<Integer> listOfNumbers = convertStringToInteger(numbers);
 
-        if (listOfNumbers.stream().anyMatch(x -> x < 0) || listOfNumbers.stream().filter(x -> x < 0).count() > 1) {
+        if (listOfNumbers.stream().filter(x -> x < 0).count() > 1) {
+
             List<Integer> negativeNumbers = listOfNumbers.stream().filter(x -> x < 0).collect(Collectors.toList());
-
             throw new InvalidInputException("negatives not allowed " + negativeNumbers.stream().map(String::valueOf).collect(Collectors.joining(",")));
-        }
 
-        return listOfNumbers.stream()
-                .mapToInt(Integer::intValue)
-                .sum();
+        } else if (listOfNumbers.stream().anyMatch(x -> x < 0)) {
+            throw new InvalidInputException("negatives not allowed");
+
+        } else {
+
+            return listOfNumbers.stream()
+                    .mapToInt(Integer::intValue)
+                    .sum();
+        }
     }
 
+    /**
+     * This method is used to convert String to Int
+     *
+     * @param numbers
+     * @return {@link List of Integer}
+     * @throws InvalidInputException
+     */
     List<Integer> convertStringToInteger(String numbers) throws InvalidInputException {
         return separateByDelimiter(numbers)
                 .stream()
@@ -38,6 +64,13 @@ public class SimpleCalculator {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This method is used to prepare spits based on delimiter
+     *
+     * @param numbers
+     * @return {@link List of String}
+     * @throws InvalidInputException
+     */
     private List<String> separateByDelimiter(String numbers) throws InvalidInputException {
         List<String> curatedSplits = new ArrayList<>();
         numbers = prepareNewLineAsDelimiter(numbers);
@@ -56,6 +89,13 @@ public class SimpleCalculator {
         return curatedSplits;
     }
 
+    /**
+     * This method is used to prepare new line char as delimiter when before and after is digit
+     *
+     * @param numbers
+     * @return {@link  String}
+     * @throws InvalidInputException
+     */
     private String prepareNewLineAsDelimiter(String numbers) throws InvalidInputException {
         if (numbers.contains(NEW_LINE)) {
             String afterNewLine;
@@ -76,6 +116,13 @@ public class SimpleCalculator {
         return numbers;
     }
 
+    /**
+     * This method is used to split the numbers by delimiter provided
+     *
+     * @param numbers
+     * @param delimiter
+     * @return {@link  List of String}
+     */
     private List<String> prepareSplitsByDelimiter(String numbers, String delimiter) {
         String escape = "//";
         List<String> splits = new ArrayList<>(Arrays.asList(numbers.split(delimiter)));
@@ -83,6 +130,12 @@ public class SimpleCalculator {
         return splits;
     }
 
+    /**
+     * This method is used to set a default delimiter
+     *
+     * @param numbers {@link  String}
+     * @return {@link  String}
+     */
     private String setDefaultDelimiter(String numbers) {
         String defaultDelimiter = ",";
         if (numbers.contains("//")) {
